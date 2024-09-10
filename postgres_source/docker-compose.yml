@@ -1,0 +1,23 @@
+version: '3.7'
+services: 
+  postgres:
+    image: postgres:latest
+    container_name: mypostgres_2
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=mydatabase
+    volumes:  # 修正 volumes 拼寫
+      - db-data:/var/lib/postgresql/data  # 將數據存儲在外部卷
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # 初始 SQL 腳本
+    networks:
+      - my-network
+
+volumes:
+  db-data:
+
+networks:
+  my-network:
+    driver: bridge
