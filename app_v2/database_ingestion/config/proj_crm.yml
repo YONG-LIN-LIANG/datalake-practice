@@ -1,0 +1,60 @@
+pipeline_config:
+  # 取得存放在 Secret Manager key 為 postgres_master 對應的 Value
+  source_credentials: postgres_master
+  s3_bucket_name: datalakepractice
+tables:
+  - customers:
+    destination_table: customers
+    export_file_name: customers.parquet
+    s3_file_path: data/in/customers
+    column_inclusions: [
+       'customer_id',
+       'first_name',
+       'last_name',
+       'email',
+       'phone'
+    ]
+    update_method: incremental_load
+    incremental_load_columns: ['created_at', 'updated_at']
+    copy_extra_params: "CSV DELIMITER AS ',' IGNOREHEADER 1 NULL AS 'NULL'"
+
+  - products:
+    destination_table: products
+    export_file_name: products.parquet
+    s3_file_path: data/in/products
+    column_inclusions: [
+       'product_id',
+       'product_name',
+       'price'
+    ]
+    update_method: incremental_load
+    incremental_load_columns: ['created_at', 'updated_at']
+
+  - orders:
+    destination_table: orders
+    export_file_name: orders.parquet
+    s3_file_path: data/in/orders
+    column_inclusions: [
+       'customer_id',
+       'first_name',
+       'last_name',
+       'email',
+       'phone'
+    ]
+    update_method: incremental_load
+    incremental_load_columns: ['created_at', 'updated_at']
+
+  - order_items:
+    destination_table: order_items
+    export_file_name: order_items.parquet
+    s3_file_path: data/in/order_items
+    column_inclusions: [
+       'order_item_id',
+       'order_id',
+       'product_id',
+       'quantity',
+       'price'
+    ]
+    update_method: incremental_load
+    incremental_load_columns: ['created_at', 'updated_at']
+    

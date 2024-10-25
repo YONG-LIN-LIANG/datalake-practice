@@ -70,7 +70,8 @@ if __name__ == '__main__':
   for table in tables:
     # Step 1: Fetch data from postgresql
     data = fetch_data_from_postgres(table)
-    file_name = f'{table}'
-    save_to_s3(data, file_name, file_format, bucket_name, file_path)
+    print(data)
+    # file_name = f'{table}'
+    # save_to_s3(data, file_name, file_format, bucket_name, file_path)
   
 
