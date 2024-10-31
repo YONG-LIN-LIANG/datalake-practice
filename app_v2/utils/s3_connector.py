@@ -44,15 +44,3 @@ class S3Connector:
           print(f"Unexpected error: {e}")
     except Exception as e:
       print(f"An error occurred: {e}")
-
-  def upload_file(self, buffer, bucket_name, file_path):
-    try:
-        if self.s3_client is None:
-            raise ValueError("S3 client not configured. Call configure() first.")
-        self.s3_client.upload_fileobj(buffer, bucket_name, file_path)
-    except ClientError as e:
-        print(f"Error uploading file to S3: {str(e)}")
-        raise
-    except Exception as e:
-        print(f"Unexpected error during upload: {str(e)}")
-        raise
