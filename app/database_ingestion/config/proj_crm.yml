@@ -4,6 +4,7 @@ pipeline_config:
   s3_bucket_name: datalakepractice
   ingestion_table_list: ['orders']
 
+
 tables:
   - customers:
     destination_table: customers
@@ -19,6 +20,8 @@ tables:
     update_method: incremental_load
     incremental_load_columns: ['created_at', 'updated_at']
     copy_extra_params: "CSV DELIMITER AS ',' IGNOREHEADER 1 NULL AS 'NULL'"
+    day_load_duration: "'7 days'"
+    column_to_extract: ['customer_id', 'first_name', 'last_name', 'email']
 
   - products:
     destination_table: products
@@ -31,6 +34,8 @@ tables:
     ]
     update_method: incremental_load
     incremental_load_columns: ['created_at', 'updated_at']
+    day_load_duration: "'7 days'"
+    column_to_extract: ['product_id', 'product_name', 'price']
 
   - orders:
     destination_table: orders
@@ -45,6 +50,8 @@ tables:
     ]
     update_method: incremental_load
     incremental_load_columns: ['created_at', 'updated_at']
+    day_load_duration: "'7 days'"
+    column_to_extract: ['order_id', 'total_amount']
 
   - order_items:
     destination_table: order_items
@@ -59,4 +66,6 @@ tables:
     ]
     update_method: incremental_load
     incremental_load_columns: ['created_at', 'updated_at']
+    day_load_duration: "'7 days'"
+    column_to_extract: ['order_item_id', 'quantity', 'price']
     

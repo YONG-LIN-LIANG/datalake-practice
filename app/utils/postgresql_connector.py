@@ -8,14 +8,16 @@ class PostgresqlConnector:
   def __init__(self, secret_name):
     self.secret_name = secret_name
     self.credentials = get_secret(self.secret_name)
-  
+    print(self.credentials)
   def get_connection(self):
     try:
       # host, dbname, port, user, password 存放在 Secret Manager 裡
       connection = psycopg2.connect(
         host=self.credentials.get('host'),
+        # host='localhost',
         database=self.credentials.get('database'),
         port=self.credentials.get('port'),
+        # port='5433',
         user=self.credentials.get('user'),
         password=self.credentials.get('password')
       )

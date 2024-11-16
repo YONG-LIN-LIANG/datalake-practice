@@ -62,10 +62,11 @@ class DataIngestionTask(BaseTask):
     table = pa.Table.from_pandas(df)
     pq.write_table(table, 'your_table.parquet')
 
-  def fetch_data_from_postgres(self, table_name):
+  def fetch_data_from_postgres(self, table_name, day_load_duration, extract_column_list):
     connection = self.source_db_connection
     cursor = connection.cursor()
-    query = f"SELECT * FROM {table_name} WHERE updated_at >= CURRENT_DATE - INTERVAL '7 months';"
+    columns = ",".join(extract_column_list)
+    query = f"SELECT {columns} FROM {table_name} WHERE updated_at >= CURRENT_DATE - INTERVAL {day_load_duration};"
     cursor.execute(query)
     records = cursor.fetchall()
 
@@ -84,7 +85,9 @@ class DataIngestionTask(BaseTask):
       s3_file_path = table['s3_file_path']
       current_timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
       export_file_name = f"{current_timestamp}.parquet"
-      table_data = self.fetch_data_from_postgres(table_name)
+      day_load_duration = table['day_load_duration']
+      extract_column_list = table['column_to_extract']
+      table_data = self.fetch_data_from_postgres(table_name, day_load_duration, extract_column_list)
       df = pd.DataFrame(table_data)
       output_file = f"s3://{self.bucket_name}/{s3_file_path}/{export_file_name}"
       df.to_parquet(output_file)
